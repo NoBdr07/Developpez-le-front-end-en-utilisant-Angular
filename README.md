@@ -1,4 +1,9 @@
 # OlympicGamesStarter
+
+This application provides information on the medal histories of countries in the Olympic Games. Using charts, it first displays the total number of medals by country, then shows the progression of achievements for each country, and offers more detailed information on a specific country page.
+
+## How to start
+
 Clone this project with `git clone https://github.com/NoBdr07/Developpez-le-front-end-en-utilisant-Angular.git`.  
 
 You must have this configuration to make this app works :  

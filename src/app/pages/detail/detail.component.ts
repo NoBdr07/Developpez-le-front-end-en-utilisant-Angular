@@ -21,17 +21,21 @@ export class DetailComponent implements OnInit {
   // Page initialization
   country!: string;
   pageTitle!: string;
-  windowWidth =
-    window.innerWidth <= 500 ? window.innerWidth : window.innerWidth / 2;
-  windowHeight =
-    window.innerWidth <= 500 ? window.innerHeight - 200 : window.innerHeight - 100 ;
+  windowWidth = window.innerWidth <= 500 ? window.innerWidth : window.innerWidth / 2;
+  windowHeight = window.innerWidth <= 500 ? window.innerHeight - 200 : window.innerHeight - 100;
+
+  private updateWindowSize(): void {
+    const isSmallScreen = window.innerWidth <= 500;
+    this.windowWidth = isSmallScreen ? window.innerWidth : window.innerWidth / 2;
+    this.windowHeight = isSmallScreen ? window.innerHeight - 200 : window.innerHeight - 100;
+  }
 
   // Data initialization for the info bubbles
-  info1 = 'Number of entries';
+  entriesLabel = 'Number of entries';
   numberOfEntries!: number;
-  info2 = 'Total number medals';
+  medalsLabel = 'Total number medals';
   numberOfMedals!: number;
-  info3 = 'Total number of athletes';
+  athletesLabel = 'Total number of athletes';
   numberOfAthletes!: number;
 
   // Observable initialization
@@ -57,38 +61,32 @@ export class DetailComponent implements OnInit {
     this.country = this.route.snapshot.paramMap.get('country')!;
     this.pageTitle = this.country;
 
-    // Data loading
+    // Load Olympic data
     this.olympics$ = this.olympicService.getOlympics();
-
-    // Data loading for the info bubbles
-    this.olympicService.getNumberOfJOs().subscribe((numberOfJOs) => {
-      this.numberOfEntries = numberOfJOs;
-    });
-
     this.medalsPerYear$ = this.olympicService.getMedalsPerYear(this.country);
 
-    this.olympicService
-      .getTotalMedals(this.country)
-      .subscribe((totalMedals) => {
-        this.numberOfMedals = totalMedals;
-      });
-
-    this.olympicService
-      .getTotalAthletes(this.country)
-      .subscribe((numberOfAthletes) => {
-        this.numberOfAthletes = numberOfAthletes;
-      });
+    // Load additional data for the info bubbles
+    this.subscriptions.push(
+      this.olympicService
+        .getNumberOfJOs()
+        .subscribe((numberOfJOs) => (this.numberOfEntries = numberOfJOs))
+    );
+    this.subscriptions.push(
+      this.olympicService
+        .getTotalMedals(this.country)
+        .subscribe((totalMedals) => (this.numberOfMedals = totalMedals))
+    );
+    this.subscriptions.push(
+      this.olympicService
+        .getTotalAthletes(this.country)
+        .subscribe(
+          (numberOfAthletes) => (this.numberOfAthletes = numberOfAthletes)
+        )
+    );
 
     // Listen to resize events
     this.subscriptions.push(
-      fromEvent(window, 'resize').subscribe(() => {
-        this.windowWidth =
-          window.innerWidth <= 500 ? window.innerWidth : window.innerWidth / 2;
-        this.windowHeight =
-          window.innerWidth <= 500
-            ? window.innerHeight - 200
-            : window.innerHeight - 100;
-      })
+      fromEvent(window, 'resize').subscribe(() => this.updateWindowSize())
     );
   }
 

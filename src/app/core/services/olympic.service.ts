@@ -4,6 +4,8 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { catchError, map, tap, first } from 'rxjs/operators';
 import { Olympic } from '../models/Olympic';
 import { ToastrService } from 'ngx-toastr';
+import { PieChartData } from '../models/PieChartData';
+
 
 @Injectable({
   providedIn: 'root',
@@ -127,7 +129,7 @@ export class OlympicService {
   }
 
   // For a specified country, get the number of medals per year in the format of ngx-charts lineChart
-  getMedalsPerYear(searchedCountry: string): Observable<{ name: string; series: { name: string; value: number }[] }[]> {
+  getMedalsPerYear(searchedCountry: string): Observable<PieChartData[]> {
     return this.olympics$.pipe(
       map((olympics) => {
         const countryOlympic = olympics.find(

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
   ActivatedRouteSnapshot,
-  RouterStateSnapshot,
   Router,
   UrlTree,
 } from '@angular/router';
@@ -16,13 +15,11 @@ export class CountryGuard {
   constructor(private olympicService: OlympicService, private router: Router) {}
 
   canActivate (
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
+    route: ActivatedRouteSnapshot
   ): Observable<boolean | UrlTree> {
     const country = route.paramMap.get('country');
     
     if (!country) {
-      console.log('No country provided in the route. Redirecting to home page.');
       return of(false);
     }
 
@@ -30,13 +27,11 @@ export class CountryGuard {
         switchMap(() => this.olympicService.isCountryInDatabase(country)),
         map(isInDb => {
           if (!isInDb) {
-            console.log('Country not found in the database. Redirecting to home page.');
             return this.router.createUrlTree(['']);
           }
           return true;
         }),
         catchError(() => {
-          console.log('An error occured. Redirecting to home page.');
           return of(this.router.createUrlTree(['']));
           
         })

@@ -2,7 +2,7 @@
 import { Participation } from "./Participation";
 
 export class Olympic {
-    public id?: number;
+    public id: number;
     public country?: string;
     public participations?: Participation[];
 

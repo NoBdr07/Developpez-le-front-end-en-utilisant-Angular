@@ -1,8 +1,8 @@
 <app-title *ngIf="numberOfJOs" [title]="pageTitle"></app-title>
 
 <div id="infoContainer">
-  <app-info *ngIf="numberOfJOs" [info]="info1" [value]="numberOfJOs"></app-info>
-  <app-info *ngIf="numberOfCountries" [info]="info2" [value]="numberOfCountries"></app-info>
+  <app-info *ngIf="numberOfJOs" [info]="josLabel" [value]="numberOfJOs"></app-info>
+  <app-info *ngIf="numberOfCountries" [info]="countriesLabel" [value]="numberOfCountries"></app-info>
 </div>
 
 <div id="pieContainer" *ngIf="medalsPerCountry$ | async as medals">

@@ -25,9 +25,9 @@ export class HomeComponent implements OnInit {
 
   //Data initialization for the info bubbles
   pageTitle = 'Medals per Country';
-  info1 = 'Number of JOs';
+  josLabel = 'Number of JOs';
   numberOfJOs!: number;
-  info2 = 'Number of countries';
+  countriesLabel = 'Number of countries';
   numberOfCountries!: number;
 
   // Observable initialization
@@ -61,7 +61,6 @@ export class HomeComponent implements OnInit {
   // Redirection to detail page when a country is selected
   onSelectCountry(event: { name: any }): void {
     this.router.navigate(['/detail', event.name]);
-    console.log(event.name);
   }
 
   ngOnInit(): void {
