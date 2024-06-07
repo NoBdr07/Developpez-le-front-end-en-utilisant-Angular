@@ -6,7 +6,6 @@ import { Olympic } from '../models/Olympic';
 import { ToastrService } from 'ngx-toastr';
 import { PieChartData } from '../models/PieChartData';
 
-
 @Injectable({
   providedIn: 'root',
 })
@@ -15,27 +14,27 @@ export class OlympicService {
   public olympics$ = new BehaviorSubject<Olympic[]>([]);
 
   constructor(private http: HttpClient, private toastr: ToastrService) {}
-  
+
   loading$ = new BehaviorSubject<boolean>(false);
 
-  loadInitialData(): Observable<Olympic[]>  {
+  loadInitialData(): Observable<Olympic[]> {
     this.loading$.next(true);
-  return this.http.get<Olympic[]>(this.olympicUrl).pipe(
-    tap((value) => {
-      this.olympics$.next(value);
-      this.loading$.next(false);
-      if (!value) {
-        this.toastr.warning('Database successfully loaded but empty.');
-      }
-    }),
-    catchError((error, caught) => {
-      console.error(error);
-      this.olympics$.next([]);
-      this.loading$.next(false);
-      this.toastr.error('An error occured while loading the data.');
-      return caught;
-    })
-  );
+    return this.http.get<Olympic[]>(this.olympicUrl).pipe(
+      tap((value) => {
+        this.olympics$.next(value);
+        this.loading$.next(false);
+        if (!value) {
+          this.toastr.warning('Database successfully loaded but empty.');
+        }
+      }),
+      catchError((error, caught) => {
+        console.error(error);
+        this.olympics$.next([]);
+        this.loading$.next(false);
+        this.toastr.error('An error occured while loading the data.');
+        return caught;
+      })
+    );
   }
 
   getOlympics(): Observable<Olympic[]> {
@@ -95,18 +94,15 @@ export class OlympicService {
           (olympic) => olympic.country === searchedCountry
         );
 
-        if (!countryOlympic || !countryOlympic.participations) {
-          return 0; 
-        }
-
-        return countryOlympic.participations.reduce(
-          (total, participation) => total + participation.medalsCount,
-          0
+        return (
+          countryOlympic?.participations?.reduce(
+            (total, participation) => total + participation.medalsCount,
+            0
+          ) ?? 0
         );
       })
     );
   }
-
 
   // Get total number of athletes for a country
   getTotalAthletes(searchedCountry: string): Observable<number> {
@@ -140,13 +136,15 @@ export class OlympicService {
           return [{ name: '', series: [] }];
         }
 
-        return [{
-          name: searchedCountry,
-          series: countryOlympic.participations.map((participation) => ({
-            name: participation.year.toString(),
-            value: participation.medalsCount,
-          }))
-        }];
+        return [
+          {
+            name: searchedCountry,
+            series: countryOlympic.participations.map((participation) => ({
+              name: participation.year.toString(),
+              value: participation.medalsCount,
+            })),
+          },
+        ];
       })
     );
   }
